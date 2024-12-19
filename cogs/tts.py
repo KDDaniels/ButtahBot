@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import io
 from RealtimeTTS import TextToAudioStream, CoquiEngine
 from discord.ext import commands
 
@@ -8,17 +9,15 @@ class TTS_Commands(commands.Cog):
         self.client = client
         self.engine = None
         self.stream = None
+        self.voice = None
+
 
     async def initialize(self):
         self.engine = CoquiEngine()
         self.stream = TextToAudioStream(self.engine)
+   
 
-    async def say(self, text: str):
-        self.stream.feed(text)
-        self.stream.play_async(output_wavfile="./audio/speech.wav", muted=True)
-        while self.stream.is_playing():
-            await asyncio.sleep(0.5)
-    
+
     @commands.command(aliases=["s"])
     async def speak(self, ctx, *, text: str):
         if ctx.voice_client and ctx.voice_client.is_connected():
@@ -26,14 +25,20 @@ class TTS_Commands(commands.Cog):
                 await ctx.send("\033[91m[ERROR]\033[0m TTS is not initialized yet.")
                 return
             
-            await self.say(text)
+            if not self.voice:
+                self.voice = ctx.channel.guild.voice_client
 
-            voice = ctx.channel.guild.voice_client
-            voice.play(discord.FFmpegPCMAudio("./audio/speech.wav"))
-            while voice.is_playing():
-                await asyncio.sleep(0.5)
+            self.stream.feed(text)
+            self.stream.play_async(output_wavfile="./audio/speech.wav", muted=True)
+            while self.stream.is_playing():
+                await asyncio.sleep(0.1)
+
+            self.voice.play(discord.FFmpegPCMAudio("./audio/speech.wav"))
+            while self.voice.is_playing():
+                await asyncio.sleep(0.1)
         else:
             await ctx.send("I'm not in a voice channel ya goober.")
+
 
     @commands.command(aliases=["cv"])
     async def change_voice(self, ctx, num=0):
