@@ -6,6 +6,7 @@
 
 import os
 import discord
+import asyncio
 from discord.ext import commands
 
 intents = discord.Intents.default()
@@ -16,6 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print(f'\033[92m[INFO]\033[0m We have logged in as \033[96m{bot.user}\033[0m')
+    await bot.change_presence(activity=discord.CustomActivity(name='Loading...'))
 
     # Loads all of the cogs in the ./cogs folder
     for filename in os.listdir("./cogs"):
@@ -26,6 +28,9 @@ async def on_ready():
             except Exception as e:
                 print(f'\033[91m[ERROR]\033[0m Failed to load cog in \033[96m{filename}\033[0m: {e}')
 
+    await bot.change_presence(activity=discord.CustomActivity(name='Done!'))
+    await asyncio.sleep(1)
+    await bot.change_presence(activity=None)
     print(f'\033[92m[INFO]\033[0m Cogs done loading.')
 
 @bot.listen()
