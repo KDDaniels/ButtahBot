@@ -1,17 +1,19 @@
 import discord
 import asyncio
+import os
 from discord.ext import commands
-
 
 
 class Sound_Commands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.command()
     async def join(self, ctx):
         current_channel = ctx.author.voice.channel
         await current_channel.connect()
 
+    @commands.command()
     async def leave(self, ctx):
         await ctx.voice_client.disconnect()
 
@@ -31,6 +33,19 @@ class Sound_Commands(commands.Cog):
                 await self.leave(ctx)
             except NameError:
                 await ctx.send('Audio file not found, check your spelling.')
+
+    @commands.command(aliases=["list", "li"])
+    async def list_sounds(self, ctx):
+        file_list = []
+        for file in os.listdir('./audio'):
+            file = file.replace('.mp3', '\0')
+            file_list.append(file)
+        
+        sounds = ''.join(str(x) for x in file_list)
+        await ctx.send(sounds)
+
+
+
 
 
 async def setup(client):
