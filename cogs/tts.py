@@ -23,7 +23,7 @@ class TTS_Commands(commands.Cog):
     async def speak(self, ctx, *, text: str):
         if ctx.voice_client and ctx.voice_client.is_connected():
             if not self.engine or not self.stream:
-                await ctx.send("[ERROR] TTS is not initialized yet.")
+                await ctx.send("\033[91m[ERROR]\033[0m TTS is not initialized yet.")
                 return
             
             await self.say(text)
@@ -53,5 +53,5 @@ async def setup(client):
         await tts_cog.initialize()
         await client.add_cog(tts_cog)
     except Exception as e:
-        print(f'[ERROR] {e}')
+        print(f'\033[91m[ERROR]\033[0m {e}')
         raise
