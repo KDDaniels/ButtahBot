@@ -10,8 +10,11 @@ class Sound_Commands(commands.Cog):
 
     @commands.command()
     async def join(self, ctx):
-        current_channel = ctx.author.voice.channel
-        await current_channel.connect()
+        try:
+            current_channel = ctx.author.voice.channel
+            await current_channel.connect()
+        except:
+            await ctx.send("You're not in a voice channel!")
 
     @commands.command()
     async def leave(self, ctx):
@@ -24,7 +27,6 @@ class Sound_Commands(commands.Cog):
 
         if sound != None:
             print(f'\033[92m[INFO]\033[0m Playing \033[96m{sound}\033[0m.')
-            await asyncio.sleep(1)
             try:
                 voice = ctx.channel.guild.voice_client
                 voice.play(discord.FFmpegPCMAudio(f'./audio/{sound}.mp3'))
@@ -38,7 +40,7 @@ class Sound_Commands(commands.Cog):
     async def list_sounds(self, ctx):
         file_list = []
         for file in os.listdir('./audio'):
-            file = file.replace('.mp3', '\0')
+            file = file.replace('.mp3', '\n')
             file_list.append(file)
         
         sounds = ''.join(str(x) for x in file_list)
