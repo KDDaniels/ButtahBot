@@ -4,7 +4,7 @@ import subprocess
 
 if __name__ == "__main__":
     """
-    Builds and then runs Docker with all of the required commands
+    Runs the docker container or rebuilds the image based on arguments
 
     Args:
         -b or -B: builds the Docker image
