@@ -10,6 +10,11 @@ class Dev_Commands(commands.Cog):
         self.client = client
 
     @commands.command()
+    async def test(self, ctx):
+        print(ctx.author.mention[2:-1])
+        await ctx.send(ctx.author.mention + "smeels")
+
+    @commands.command()
     async def hello(self, ctx):
         """
         Basic reply for quick testing
