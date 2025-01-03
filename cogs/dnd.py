@@ -8,6 +8,7 @@ class DND_Commands(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.ai_cog = self.client.get_cog("AI_Commands")
+        self.data_cog = self.client.get_cog("Data_Commands")
         
     @commands.command(alias=["desc", "des"],
                       description="Describe an object in detail with AI")
