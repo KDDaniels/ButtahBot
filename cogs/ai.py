@@ -10,7 +10,7 @@ class AI_Commands(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.tokens = 0
-        self.personality = "You answer questions in a short paragraph"
+        self.personality = "You answer questions"
         openai.api_key = os.environ["OPENAI_API_KEY"]
 
     async def get_openai_response(self, role, prompt):
@@ -23,8 +23,7 @@ class AI_Commands(commands.Cog):
             response = openai.chat.completions.create(
                 model = "gpt-4o-mini",
                 messages = messages,
-                temperature = 0.7,
-                # max_tokens = 150,
+                temperature = 0.7
             )
 
             self.tokens += response.usage.total_tokens

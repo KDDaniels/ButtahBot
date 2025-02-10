@@ -2,6 +2,9 @@ import sqlite3
 from discord.ext import commands
 
 class Database_Commands(commands.Cog):
+    """
+    Commands related to database stuff
+    """
     def __init__(self, client):
         self.client = client
         self.connection = None
@@ -39,6 +42,7 @@ class Database_Commands(commands.Cog):
         try:
             self.connection = sqlite3.connect(db_name)
             self.cursor = self.connection.cursor()
+            self.cursor.executescript(self.schema)
         except Exception as e:
             print(f"[ERROR] {e}")
 
